@@ -1,8 +1,8 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
-  worker: { format: 'es' },
-  test: { include: ['src/**/*.test.ts'] },
-})
+  worker: { format: "es" },
+  test: { include: ["src/**/*.test.ts"] },
+});

@@ -35,11 +35,16 @@ The page must remain open. An operating system or browser may suspend audio duri
 ## Checks
 
 ```sh
-pnpm check          # TypeScript and audio-engine tests
+pnpm check          # Biome, TypeScript, and audio-engine tests
+pnpm lint           # Check formatting, imports, and lint rules
+pnpm lint:fix       # Format, organize imports, and apply safe lint fixes
+pnpm format         # Format files with Biome
 pnpm build          # Production files in dist/
 pnpm test:e2e       # Production browser tests; run build first
 pnpm deploy:check  # Build and Cloudflare deployment dry run; does not publish
 ```
+
+`pnpm install` sets up Husky's Git hooks. Before each commit, lint-staged runs Biome on staged files, applies formatting and safe fixes, and blocks the commit if errors remain. Biome respects `.gitignore` and skips the generated pnpm lockfile.
 
 Browser tests use installed Google Chrome with desktop and mobile viewports. If Chrome is unavailable, install it with `pnpm exec playwright install chrome`. Tests check real audio samples, continuity while the UI thread is blocked, tempo transitions, mute, restart, interruption recovery, persistence, input bounds, and layout overflow. Engine tests include an hour of simulated continuous playback.
 
@@ -61,15 +66,15 @@ Use [Cloudflare Workers Builds](https://developers.cloudflare.com/workers/ci-cd/
 
 In Cloudflare **Workers & Pages**, connect `ericbiewener/sonic-pulse` through **Create application → GitHub**, or open the existing `sonic-pulse` Worker and choose **Settings → Builds → Connect**. Authorize the Cloudflare GitHub app to access this repository, then use these settings:
 
-| Setting | Value |
-| --- | --- |
-| Worker name | `sonic-pulse` |
-| Production branch | `main` |
-| Root directory | Repository root (`/`) |
-| Build command | `pnpm check && pnpm build` |
-| Deploy command | `pnpm exec cf deploy ./dist` |
-| Builds for other branches / Previews | Disabled |
-| Build API token | Let Cloudflare create and manage a token |
+| Setting                              | Value                                    |
+| ------------------------------------ | ---------------------------------------- |
+| Worker name                          | `sonic-pulse`                            |
+| Production branch                    | `main`                                   |
+| Root directory                       | Repository root (`/`)                    |
+| Build command                        | `pnpm check && pnpm build`               |
+| Deploy command                       | `pnpm exec cf deploy ./dist`             |
+| Builds for other branches / Previews | Disabled                                 |
+| Build API token                      | Let Cloudflare create and manage a token |
 
 Override Cloudflare's suggested `npx cf build` and `npx cf deploy --prebuilt` commands with the commands above. This project requires pnpm, so `npx` fails with `EBADDEVENGINES`. The deploy command uploads the static `dist/` output produced by Vite.
 

@@ -12,9 +12,16 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "check": "tsc -b && vitest run",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check": "pnpm lint && tsc -b && vitest run",
     "deploy": "pnpm build && cf deploy ./dist",
-    "deploy:check": "pnpm build && cf deploy ./dist --dry-run"
+    "deploy:check": "pnpm build && cf deploy ./dist --dry-run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
   },
   "keywords": [],
   "author": "",
@@ -35,12 +42,15 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.8",
     "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "cf": "1.0.0-rc.1",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",
     "vitest": "^5.1.0"
