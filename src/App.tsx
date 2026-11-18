@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   clamp,
+  DEFAULT_SETTINGS,
   loadSettings,
   normalizeSettings,
   type PulseSettings,
@@ -15,7 +16,7 @@ import { PulseDial } from "./components/PulseDial";
 export default function App() {
   const [settings, setSettings] = useState(loadSettings);
   const { status, snapshot, error, toggle } = usePulse(settings);
-  const previousVolume = useRef(settings.volume || 35);
+  const previousVolume = useRef(settings.volume || DEFAULT_SETTINGS.volume);
   const taps = useRef<number[]>([]);
   const [tapCount, setTapCount] = useState(0);
   const playing = status === "playing";

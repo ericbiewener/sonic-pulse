@@ -16,8 +16,8 @@ export interface PulseSettings {
 export const DEFAULT_SETTINGS: PulseSettings = {
   mode: "manual",
   bpm: 90,
-  pitch: 440,
-  volume: 35,
+  pitch: 40,
+  volume: 100,
   minBpm: 60,
   maxBpm: 140,
   minHold: 4,
