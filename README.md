@@ -55,7 +55,29 @@ pnpm deploy         # Publish sonic-pulse to the authenticated Cloudflare accoun
 
 On this machine, Cloudflare skills are installed in `~/.agents/skills`, the MCP server is registered in `~/.codex-personal/config.toml`, and both MCP and CLI OAuth login are complete. Restart Codex to load the newly registered MCP server. The user-level instruction to prefer `cf` is in `~/.codex-personal/AGENTS.md`. Credentials are stored by the tools outside this repository.
 
-For Cloudflare Workers Builds, use `pnpm build` as the build command and `pnpm exec cf deploy ./dist` as the deploy command. Use Node 26.12.0 and the committed pnpm lockfile. Supply Cloudflare credentials through the hosting service or CI secrets when needed; do not put them in frontend environment variables. See [Cloudflare agent setup](https://developers.cloudflare.com/agent-setup/prompt.md) and [static directory deployments](https://developers.cloudflare.com/cf/projects/#deploy-a-static-assets-directory).
+### Automatic deployments from `main`
+
+Use [Cloudflare Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) to watch GitHub and build and deploy the app inside Cloudflare. Every push to `main`, including a merged pull request, triggers a production deployment after the checks pass.
+
+In Cloudflare **Workers & Pages**, connect `ericbiewener/sonic-pulse` through **Create application → GitHub**, or open the existing `sonic-pulse` Worker and choose **Settings → Builds → Connect**. Authorize the Cloudflare GitHub app to access this repository, then use these settings:
+
+| Setting | Value |
+| --- | --- |
+| Worker name | `sonic-pulse` |
+| Production branch | `main` |
+| Root directory | Repository root (`/`) |
+| Build command | `pnpm check && pnpm build` |
+| Deploy command | `pnpm exec cf deploy ./dist` |
+| Builds for other branches / Previews | Disabled |
+| Build API token | Let Cloudflare create and manage a token |
+
+Override Cloudflare's suggested `npx cf build` and `npx cf deploy --prebuilt` commands with the commands above. This project requires pnpm, so `npx` fails with `EBADDEVENGINES`. The deploy command uploads the static `dist/` output produced by Vite.
+
+Workers Builds reads Node **26.12.0** from `.nvmrc` and pnpm **12.21.0** from `package.json`, and installs dependencies using the committed `pnpm-lock.yaml`. Keep those version pins up to date together. Credentials belong in Cloudflare's build settings, never in frontend environment variables.
+
+The Git connection and build settings live in Cloudflare; committing this repository alone does not enable automatic deployments. No GitHub Actions workflow or GitHub deployment secrets are needed. View build status and logs in the Worker's **Builds** tab, and retry a build there when needed.
+
+See [Cloudflare agent setup](https://developers.cloudflare.com/agent-setup/prompt.md), [build configuration](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/), and [static directory deployments](https://developers.cloudflare.com/cf/projects/#deploy-a-static-assets-directory).
 
 ## Code map
 
