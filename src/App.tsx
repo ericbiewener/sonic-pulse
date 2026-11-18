@@ -11,6 +11,7 @@ import {
 import { usePulse } from "./audio/use-pulse";
 import { NumberField, Slider } from "./components/Controls";
 import { Icon } from "./components/Icon";
+import { InstallApp } from "./components/InstallApp";
 import { PulseDial } from "./components/PulseDial";
 
 export default function App() {
@@ -412,6 +413,7 @@ export default function App() {
           </div>
         </div>
       </main>
+      <InstallApp />
     </div>
   );
 }
