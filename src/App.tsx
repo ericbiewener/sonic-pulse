@@ -46,35 +46,23 @@ export default function App() {
     update({ mode, ...(mode === 'manual' && active && snapshot ? { bpm: Math.round(snapshot.bpm) } : {}) })
   }
 
-  const stageDescription = !active ? (settings.mode === 'manual' ? 'A steady beat, at your pace.' : 'A new rhythm around every corner.')
+  const stageDescription = !active ? null
     : settings.mode === 'manual' ? 'Steady, until you change it.'
     : snapshot?.stage === 'glide' ? `Gliding to ${Math.round(snapshot.targetBpm)} BPM`
     : `Next tempo in ${Math.ceil(snapshot?.remaining ?? 0)} seconds`
 
   return <div className="app-shell">
-    <header className="site-header">
-      <a href="/" className="brand" aria-label="Sonic Pulse home"><span className="brand-icon"><Icon name="pulse" size={25} /></span><span>sonic<span className="brand-light">pulse</span><span className="brand-period">.</span></span></a>
-      <span className="header-caption">A SPACE FOR RHYTHM</span>
-      <span className={`connection-status ${playing ? 'live' : ''}`}><i />{playing ? 'Audio is live' : status === 'interrupted' ? 'Audio paused' : 'Ready when you are'}</span>
-    </header>
-
     <main>
-      <section className="intro">
-        <div><p className="eyebrow intro-eyebrow">LESS NOISE. MORE FLOW.</p><h1>Find your rhythm<span>.</span></h1><p className="intro-description">Set a pulse. Let it wander. Stay in the moment.</p></div>
-        <div className="endless-note"><Icon name="infinity" size={24} /><span>No finish line.<br /><strong>Just your next beat.</strong></span></div>
-      </section>
-
       <div className="instrument-grid">
         <section className="pulse-panel" aria-label="Pulse player">
-          <div className="panel-topline"><span className="eyebrow">THE PULSE</span><span className="small-badge"><Icon name="infinity" size={15} /> CONTINUOUS</span></div>
           <PulseDial bpm={bpm} playing={playing} phase={snapshot?.beatPhase ?? 0} mode={settings.mode}
             range={!active && settings.mode === 'random' ? [settings.minBpm, settings.maxBpm] : undefined} />
-          <div className="pulse-message"><span className={playing ? 'message-dot live' : 'message-dot'} />{stageDescription}</div>
+          {stageDescription && <div className="pulse-message"><span className={playing ? 'message-dot live' : 'message-dot'} />{stageDescription}</div>}
           <div className="transport">
             <button className="play-button" onClick={() => void toggle()} disabled={status === 'starting'}>
               <Icon name={playing ? 'stop' : 'play'} size={23} />{status === 'starting' ? 'Starting audio…' : playing ? 'Stop pulse' : status === 'interrupted' ? 'Resume pulse' : 'Start pulse'}
             </button>
-            <p className="transport-hint">{status === 'interrupted' ? 'Your device paused audio. Tap resume to continue.' : 'Your pulse keeps going until you stop it.'}</p>
+            {status === 'interrupted' && <p className="transport-hint">Your device paused audio. Tap resume to continue.</p>}
           </div>
           {error && <p className="audio-error" role="alert">{error}</p>}
           <div className="session-stats">

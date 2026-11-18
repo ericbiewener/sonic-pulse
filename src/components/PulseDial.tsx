@@ -17,7 +17,6 @@ export function PulseDial({ bpm, playing, phase, mode, range }: {
         transform={`rotate(${playing ? phase * 360 : 0} 160 160)`} />
     </svg>
     <div className="dial-center">
-      <span className="eyebrow">{range ? 'TEMPO RANGE' : playing ? 'CURRENT TEMPO' : 'YOUR TEMPO'}</span>
       <output className={`bpm-value ${range ? 'tempo-range' : ''}`} aria-label="Current tempo">{range ? `${range[0]}–${range[1]}` : Math.round(bpm)}</output>
       <span className="bpm-unit">beats per minute</span>
       <span className="dial-mode"><i />{mode === 'manual' ? 'Steady rhythm' : 'Evolving rhythm'}</span>
