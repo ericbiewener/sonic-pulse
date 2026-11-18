@@ -65,10 +65,9 @@ export default function App() {
     });
   }
 
-  const stageDescription = !active
-    ? null
-    : settings.mode === "manual"
-      ? "Steady, until you change it."
+  const stageDescription =
+    !active || settings.mode === "manual"
+      ? null
       : snapshot?.stage === "glide"
         ? `Gliding to ${Math.round(snapshot.targetBpm)} BPM`
         : `Next tempo in ${Math.ceil(snapshot?.remaining ?? 0)} seconds`;
