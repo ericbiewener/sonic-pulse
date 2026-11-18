@@ -22,6 +22,10 @@ export default defineConfig({
         channel: "chrome",
       },
     },
+    {
+      name: "mobile-webkit",
+      use: { ...devices["iPhone 13"], defaultBrowserType: "webkit" },
+    },
   ],
   webServer: {
     command: "pnpm preview --port 4173 --strictPort",
